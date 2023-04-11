@@ -18,9 +18,8 @@ def detect(args, model, tokenizer, text):
     index = torch.nonzero(predictions).squeeze(dim=-1).tolist()
     output = []
     for idx in index:
-        if idx > 0:
-            idx = offsets[2 * (idx - 1)]
-            output.append((idx, text[idx]))
+        idx = offsets[2 * (idx - 1)]
+        output.append((idx, text[idx]))
     print("检查结果: ", output)
     
 def main():
