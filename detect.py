@@ -12,14 +12,16 @@ def detect(args, model, tokenizer, text):
     encoding = tokenizer.encode(text, truncation=True, max_length=args.max_seq_length)
     input_ids = torch.tensor([encoding["input_ids"]], device=args.device)
     offsets = encoding["offsets"]
+    length = len(offsets) / 2
     with torch.no_grad():
         logits = model(input_ids)
     predictions = logits.squeeze(dim=0).sigmoid().round()
     index = torch.nonzero(predictions).squeeze(dim=-1).tolist()
     output = []
     for idx in index:
-        idx = offsets[2 * (idx - 1)]
-        output.append((idx, text[idx]))
+        if idx > 0 and idx <= length:
+            idx = offsets[2 * (idx - 1)]
+            output.append((idx, text[idx]))
     print("检查结果: ", output)
     
 def main():
