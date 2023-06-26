@@ -142,8 +142,9 @@ def electra_generator_mask(sent_list, index, args, model):
     tensor_index = binary_search(encoding["offsets"], index) + 1
         
     topk_indexes = output[0][0][tensor_index].topk(args.topk, largest=True, sorted=True)[1].tolist()
-    start = min(args.topk // 2, 5)
-    random_index = random.choice(topk_indexes[start : ])
+    start = min(args.topk // 2, 10)
+    topk_indexes = topk_indexes[start : ]
+    random_index = random.choice(topk_indexes)
     repeats = 10
     n = 0
     while args.vocab[random_index] == c or not isChinese(args.vocab[random_index]):
